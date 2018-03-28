@@ -28,7 +28,10 @@ describe ChronicDuration do
       '18 months'             => 3600 * 24 * 30 * 18,
       '1 year 6 months'       => (3600 * 24 * (365.25 + 6 * 30)).to_i,
       'day'                   => 3600 * 24,
-      'minute 30s'            => 90
+      'minute 30s'            => 90,
+      'P6M'                   => 6 * 30 * 24 * 3600,
+      'T6M'                   => 60 * 6,
+      'P3Y6M4DT12H30M5S'      => 3 * 31557600 + 6 * 30 * 24 * 3600 + 4 * 24 * 3600 + 12 * 3600 + 30 * 60 + 5
     }
 
     context "when string can't be parsed" do
@@ -54,7 +57,7 @@ describe ChronicDuration do
     end
 
     it "should return zero if the string parses as zero and the keep_zero option is true" do
-      expect(ChronicDuration.parse('0', :keep_zero => true)).to equal 0
+      expect(ChronicDuration.parse('0', :keep_zero => true)).to eq 0
     end
 
     it "should return a float if seconds are in decimals" do
@@ -66,12 +69,12 @@ describe ChronicDuration do
     end
 
     it "should be able to parse minutes by default" do
-      expect(ChronicDuration.parse('5', :default_unit => "minutes")).to equal 300
+      expect(ChronicDuration.parse('5', :default_unit => "minutes")).to eq 300
     end
 
     @exemplars.each do |k, v|
       it "parses a duration like #{k}" do
-        expect(ChronicDuration.parse(k)).to equal v
+        expect(ChronicDuration.parse(k)).to eq v
       end
     end
 
@@ -221,7 +224,7 @@ describe ChronicDuration do
     @exemplars.each do |seconds, format_spec|
       format_spec.each do |format, _|
         it "outputs a duration for #{seconds} that parses back to the same thing when using the #{format.to_s} format" do
-          expect(ChronicDuration.parse(ChronicDuration.output(seconds, :format => format))).to equal seconds
+          expect(ChronicDuration.parse(ChronicDuration.output(seconds, :format => format))).to eq seconds
         end
       end
     end
@@ -277,8 +280,8 @@ describe ChronicDuration do
 
     it "should parse knowing the work week" do
       week = ChronicDuration.parse('5d')
-      expect(ChronicDuration.parse('40h')).to equal week
-      expect(ChronicDuration.parse('1w')).to equal week
+      expect(ChronicDuration.parse('40h')).to eq week
+      expect(ChronicDuration.parse('1w')).to eq week
     end
   end
 end
