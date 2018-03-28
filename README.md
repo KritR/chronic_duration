@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/KritR/chronic_duration.svg?branch=master)](https://travis-ci.org/KritR/chronic_duration)
+[![Coverage Status](https://coveralls.io/repos/github/KritR/chronic_duration/badge.svg?branch=master)](https://coveralls.io/github/KritR/chronic_duration?branch=master)
 
 # Chronic Duration
 
