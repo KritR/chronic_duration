@@ -181,9 +181,14 @@ private
 
   def cleanup(string)
     res = string.downcase
+		res = convertISO8601(res)
     res = filter_by_type(Numerizer.numerize(res))
     res = res.gsub(float_matcher) {|n| " #{n} "}.squeeze(' ').strip
     res = filter_through_white_list(res)
+  end
+  
+  def convertISO8601(string)
+    return string.gsub(/p(?:(\d+(?:\.\d*)?|\.\d+)y)?(?:(\d+(?:\.\d*)?|\.\d+)m)?(?:(\d+(?:\.\d*)?|\.\d+)d)?(?:T(?:(\d+(?:\.\d*)?|\.\d+)h)?(?:(\d+(?:\.\d*)?|\.\d+)m)?(?:(\d+(?:\.\d*)?|\.\d+)s)?)?/, '0\1 year 0\2 month 0\3 day 0\4 hour 0\5 minute 0\6 second')
   end
 
   def convert_to_number(string)
