@@ -34,11 +34,11 @@ describe ChronicDuration do
     context "when string can't be parsed" do
 
       it "returns nil" do
-        ChronicDuration.parse('gobblygoo').should be_nil
+        expect(ChronicDuration.parse('gobblygoo')).to be nil
       end
 
       it "cannot parse zero" do
-        ChronicDuration.parse('0').should be_nil
+        expect(ChronicDuration.parse('0')).to be nil
       end
 
       context "when @@raise_exceptions set to true" do
@@ -54,24 +54,24 @@ describe ChronicDuration do
     end
 
     it "should return zero if the string parses as zero and the keep_zero option is true" do
-      ChronicDuration.parse('0', :keep_zero => true).should == 0
+      expect(ChronicDuration.parse('0', :keep_zero => true)).to equal 0
     end
 
     it "should return a float if seconds are in decimals" do
-      ChronicDuration.parse('12 mins 3.141 seconds').is_a?(Float).should be_true
+      expect(ChronicDuration.parse('12 mins 3.141 seconds').is_a?(Float)).to be true
     end
 
     it "should return an integer unless the seconds are in decimals" do
-      ChronicDuration.parse('12 mins 3 seconds').is_a?(Integer).should be_true
+      expect(ChronicDuration.parse('12 mins 3 seconds').is_a?(Integer)).to be true
     end
 
     it "should be able to parse minutes by default" do
-      ChronicDuration.parse('5', :default_unit => "minutes").should == 300
+      expect(ChronicDuration.parse('5', :default_unit => "minutes")).to equal 300
     end
 
     @exemplars.each do |k, v|
       it "parses a duration like #{k}" do
-        ChronicDuration.parse(k).should == v
+        expect(ChronicDuration.parse(k)).to equal v
       end
     end
 
@@ -165,7 +165,7 @@ describe ChronicDuration do
     @exemplars.each do |k, v|
       v.each do |key, val|
         it "properly outputs a duration of #{k} seconds as #{val} using the #{key.to_s} format option" do
-          ChronicDuration.output(k, :format => key).should == val
+          expect(ChronicDuration.output(k, :format => key)).to eq val
         end
       end
     end
@@ -192,28 +192,28 @@ describe ChronicDuration do
     @keep_zero_exemplars.each do |k, v|
       v.each do |key, val|
         it "should properly output a duration of 0 seconds as #{val.nil? ? "nil" : val} using the #{key.to_s} format option, if the keep_zero option is #{k.to_s}" do
-          ChronicDuration.output(0, :format => key, :keep_zero => k).should == val
+          expect(ChronicDuration.output(0, :format => key, :keep_zero => k)).to eq val
         end
       end
     end
 
     it "returns weeks when needed" do
-      ChronicDuration.output(45*24*60*60, :weeks => true).should =~ /.*wk.*/
+      expect(ChronicDuration.output(45*24*60*60, :weeks => true)).to match /.*wk.*/
     end
 
     it "returns hours and minutes only when :hours_only option specified" do
-      ChronicDuration.output(395*24*60*60 + 15*60, :limit_to_hours => true).should == '9480 hrs 15 mins'
+      expect(ChronicDuration.output(395*24*60*60 + 15*60, :limit_to_hours => true)).to eq '9480 hrs 15 mins'
     end
 
     it "returns the specified number of units if provided" do
-      ChronicDuration.output(4 * 3600 + 60 + 1, units: 2).should == '4 hrs 1 min'
-      ChronicDuration.output(6 * 30 * 24 * 3600 + 24 * 3600 + 3600 + 60 + 1, units: 3, format: :long).should == '6 months 1 day 1 hour'
+      expect(ChronicDuration.output(4 * 3600 + 60 + 1, units: 2)).to eq '4 hrs 1 min'
+      expect(ChronicDuration.output(6 * 30 * 24 * 3600 + 24 * 3600 + 3600 + 60 + 1, units: 3, format: :long)).to eq '6 months 1 day 1 hour'
     end
 
     context "when the format is not specified" do
 
       it "uses the default format" do
-        ChronicDuration.output(2 * 3600 + 20 * 60).should == '2 hrs 20 mins'
+        expect(ChronicDuration.output(2 * 3600 + 20 * 60)).to eq '2 hrs 20 mins'
       end
 
     end
@@ -221,13 +221,13 @@ describe ChronicDuration do
     @exemplars.each do |seconds, format_spec|
       format_spec.each do |format, _|
         it "outputs a duration for #{seconds} that parses back to the same thing when using the #{format.to_s} format" do
-          ChronicDuration.parse(ChronicDuration.output(seconds, :format => format)).should == seconds
+          expect(ChronicDuration.parse(ChronicDuration.output(seconds, :format => format))).to equal seconds
         end
       end
     end
 
     it "uses user-specified joiner if provided" do
-      ChronicDuration.output(2 * 3600 + 20 * 60, joiner: ', ').should == '2 hrs, 20 mins'
+      expect(ChronicDuration.output(2 * 3600 + 20 * 60, joiner: ', ')).to eq '2 hrs, 20 mins'
     end
 
   end
@@ -235,15 +235,15 @@ describe ChronicDuration do
   describe ".filter_by_type" do
 
     it "receives a chrono-formatted time like 3:14 and return a human time like 3 minutes 14 seconds" do
-      ChronicDuration.instance_eval("filter_by_type('3:14')").should == '3 minutes 14 seconds'
+      expect(ChronicDuration.instance_eval("filter_by_type('3:14')")).to eq '3 minutes 14 seconds'
     end
 
     it "receives chrono-formatted time like 12:10:14 and return a human time like 12 hours 10 minutes 14 seconds" do
-      ChronicDuration.instance_eval("filter_by_type('12:10:14')").should == '12 hours 10 minutes 14 seconds'
+      expect(ChronicDuration.instance_eval("filter_by_type('12:10:14')")).to eq '12 hours 10 minutes 14 seconds'
     end
 
     it "returns the input if it's not a chrono-formatted time" do
-      ChronicDuration.instance_eval("filter_by_type('4 hours')").should == '4 hours'
+      expect(ChronicDuration.instance_eval("filter_by_type('4 hours')")).to eq '4 hours'
     end
 
   end
@@ -251,15 +251,15 @@ describe ChronicDuration do
   describe ".cleanup" do
 
     it "cleans up extraneous words" do
-      ChronicDuration.instance_eval("cleanup('4 days and 11 hours')").should == '4 days 11 hours'
+      expect(ChronicDuration.instance_eval("cleanup('4 days and 11 hours')")).to eq '4 days 11 hours'
     end
 
     it "cleans up extraneous spaces" do
-      ChronicDuration.instance_eval("cleanup('  4 days and 11     hours')").should == '4 days 11 hours'
+      expect(ChronicDuration.instance_eval("cleanup('  4 days and 11     hours')")).to eq '4 days 11 hours'
     end
 
     it "inserts spaces where there aren't any" do
-      ChronicDuration.instance_eval("cleanup('4m11.5s')").should == '4 minutes 11.5 seconds'
+      expect(ChronicDuration.instance_eval("cleanup('4m11.5s')")).to eq '4 minutes 11.5 seconds'
     end
 
   end
@@ -277,8 +277,8 @@ describe ChronicDuration do
 
     it "should parse knowing the work week" do
       week = ChronicDuration.parse('5d')
-      ChronicDuration.parse('40h').should == week
-      ChronicDuration.parse('1w').should == week
+      expect(ChronicDuration.parse('40h')).to equal week
+      expect(ChronicDuration.parse('1w')).to equal week
     end
   end
 end
