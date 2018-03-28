@@ -280,6 +280,7 @@ private
       'w'       => 'weeks',
       'months'  => 'months',
       'mo'      => 'months',
+      'mon'     => 'months',
       'mos'     => 'months',
       'month'   => 'months',
       'years'   => 'years',
