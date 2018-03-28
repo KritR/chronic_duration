@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/hpoydar/chronic_duration.png?branch=master)](https://travis-ci.org/hpoydar/chronic_duration)
+[![Build Status](https://travis-ci.org/KritR/chronic_duration.svg?branch=master)](https://travis-ci.org/KritR/chronic_duration)
 
 # Chronic Duration
 
