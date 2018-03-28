@@ -192,7 +192,7 @@ private
   end
 
   def convert_to_number(string)
-    string.to_f % 1 > 0 ? string.to_f : string.to_i
+		string.to_r.to_f % 1 > 0 ? string.to_r.to_f : string.to_r.to_i
   end
 
   def duration_units_list
@@ -228,7 +228,7 @@ private
   end
 
   def float_matcher
-    /[0-9]*\.?[0-9]+/
+		/[0-9]*(\.|\/)?[0-9]+/
   end
 
   # Get rid of unknown words and map found
