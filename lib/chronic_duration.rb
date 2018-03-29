@@ -188,7 +188,8 @@ private
   end
   
   def convertISO8601(string)
-    return string.gsub(/p(?:(\d+(?:\.\d*)?|\.\d+)y)?(?:(\d+(?:\.\d*)?|\.\d+)m)?(?:(\d+(?:\.\d*)?|\.\d+)d)?(?:T(?:(\d+(?:\.\d*)?|\.\d+)h)?(?:(\d+(?:\.\d*)?|\.\d+)m)?(?:(\d+(?:\.\d*)?|\.\d+)s)?)?/, '0\1 year 0\2 month 0\3 day 0\4 hour 0\5 minute 0\6 second')
+		float_matcher_selective = /([0-9]*(?:\.|\/)?[0-9]+)/
+    return string.gsub(/p(?:#{float_matcher_selective}y)?(?:#{float_matcher_selective}m)?(?:#{float_matcher_selective}d)?(?:T(?:#{float_matcher_selective}h)?(?:#{float_matcher_selective}m)?(?:#{float_matcher_selective}s)?)?/, '0\1 year 0\2 month 0\3 day 0\4 hour 0\5 minute 0\6 second')
   end
 
   def convert_to_number(string)
