@@ -34,7 +34,11 @@ describe ChronicDuration do
 			'3/2 hours'             => 1.5 * 60 * 60,
       'P6M'                   => 6 * 30 * 24 * 3600,
       'T6M'                   => 60 * 6,
-      'P3Y6M4DT12H30M5S'      => 3 * 31557600 + 6 * 30 * 24 * 3600 + 4 * 24 * 3600 + 12 * 3600 + 30 * 60 + 5
+      'P3Y6M4DT12H30M5S'      => 3 * 31557600 + 6 * 30 * 24 * 3600 + 4 * 24 * 3600 + 12 * 3600 + 30 * 60 + 5,
+			'half an hour'          => 30 * 60,
+			'a quarter of an hour'  => 15 * 60,
+			'quarter hour'          => 15 * 60,
+		  'tenth of a day'        => 3600 * 24 / 10
     }
 
     context "when string can't be parsed" do

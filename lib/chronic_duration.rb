@@ -182,11 +182,12 @@ private
   def cleanup(string)
     res = string.downcase
 		res = convertISO8601(res)
+		res = pre_numerizer(res)
     res = filter_by_type(Numerizer.numerize(res))
     res = res.gsub(float_matcher) {|n| " #{n} "}.squeeze(' ').strip
     res = filter_through_white_list(res)
   end
-  
+
   def convertISO8601(string)
 		float_matcher_selective = /([0-9]*(?:\.|\/)?[0-9]+)/
     return string.gsub(/p(?:#{float_matcher_selective}y)?(?:#{float_matcher_selective}m)?(?:#{float_matcher_selective}d)?(?:T(?:#{float_matcher_selective}h)?(?:#{float_matcher_selective}m)?(?:#{float_matcher_selective}s)?)?/, '0\1 year 0\2 month 0\3 day 0\4 hour 0\5 minute 0\6 second')
@@ -295,4 +296,60 @@ private
   def join_words
     ['and', 'with', 'plus']
   end
+
+	# FOLLOWING LINES ARE ALL TILL NUMERIZER GETS FIXED OR WE SWITCH TO ANOTHER NUMBER CONVERTER
+	def pre_numerizer(string)
+		# Converts Lonely Fractions into Numbered Fraction ('half' to '1/2') because Numerizer Currently Doesn't ...
+		fractions_regex = fraction_words.keys.reduce { |a,b| a + '|' + b }
+		numbers_regex = number_words.reduce { |a,b| a + '|' + b }
+		string = string.gsub(/((?:\S*) ?(?:#{fractions_regex}))/) { | match |
+			rep = match
+			if (match =~ /^(#{numbers_regex}|[0-9])/) == nil then
+				for word, num in fraction_words do
+				  if (match =~ /(#{word})/) != nil then
+						rep = num
+					end
+			  end
+			end
+			rep
+		}
+		return string
+	end
+
+	def fraction_words
+		{
+			'hal(?:fs?|ves?)' =>  '1/2',
+			'third(s)?' =>  '1/3',
+			'fourth(s)?' =>  '1/4',
+			'quarter(s)?' =>  '1/4',
+			'fifth(s)?' =>  '1/5',
+			'sixth(s)?' =>  '1/6',
+			'seventh(s)?' =>  '1/7',
+			'eighth(s)?' =>  '1/8',
+			'nineth(s)?' =>  '1/9',
+			'tenth(s)?' => '1/10',
+			'eleventh(s)?' => '1/11',
+			'twelfth(s)?' => '1/12',
+			'thirteenth(s)?' => '1/13',
+			'fourteenth(s)?' => '1/14',
+			'fifteenth(s)?' => '1/15',
+			'sixteenth(s)?' => '1/16',
+			'seventeenth(s)?' => '1/17',
+			'eighteenth(s)?' => '1/18',
+			'nineteenth(s)?' => '1/19',
+			'twentieth(s)?' => '1/20',
+			'thirtieth(s)?' => '1/30',
+			'fourtieth(s)?' => '1/40',
+			'fiftieth(s)?' => '1/50',
+			'sixtieth(s)?' => '1/60',
+			'seventieth(s)?' => '1/70',
+			'eightieth(s)?' => '1/80',
+			'ninetieth(s)?' => '1/90'
+		}
+	end
+
+	def number_words
+		['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety', 'hundred', 'thousand', 'million', 'billion', 'trillion']
+	end
+
 end
